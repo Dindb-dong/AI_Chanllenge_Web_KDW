@@ -21,7 +21,7 @@
     p5.js 라이브러리를 불러옵니다. 
     반응형 웹 페이지 구현: 노드7
     -->
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
 </head>
 
 <body>
@@ -29,7 +29,7 @@
         div 요소에 "p5 Container"라는 ID를 부여합니다. 해당 ID는 HTML 코드 아래의 p5.js에서 참조될 것입니다. 
         반응형 웹 페이지 구현: 노드7 
     -->
-
+    <div id="p5Container" style="position: fixed; z-index: -1;"></div>
     <div id="header">
         <div class="container">
             <nav>
@@ -251,21 +251,22 @@
      Form과 구글 스프레드 시트 연결: 노드 9
 -->
     <script>
-        const scriptURL = '< add you own link here >' // Apps Script 주소를 넣어 주세요. 
-        const form = document.forms['submit-to-google-sheet']
-        const msg = document.getElementById("msg")
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbzZV4d5pix11mT6idZTAYIbvJ7gZLqL5gCw33-xnhFy3AQmALE8H-_2Zdw7BmcjoPTO/exec' // Apps Script 주소를 넣어 주세요. 
+        const form = document.forms['submit-to-google-sheet']   // 'submit-to-google-sheet'라는 폼을 가져옵니다. 
+        const msg = document.getElementById("msg")         // "msg"라는 ID의 HTML 요소를 가져옵니다. 
 
+        // 사용자가 폼을 제출할 때마다 동작을 수행합니다.
         form.addEventListener('submit', e => {
-            e.preventDefault()
-            fetch(scriptURL, { method: 'POST', body: new FormData(form) })
+            e.preventDefault()                                                         // 제출 동작이 일어나지 않도록 합니다. 
+            fetch(scriptURL, { method: 'POST', body: new FormData(form) })             // App Script URL로 데이터와 함께 POST 요청을 보냅니다. 
                 .then(response => {
-                    msg.innerHTML = "Message sent successfully"
-                    setTimeout(function () {
+                    msg.innerHTML = "Message sent successfully"               // "msg" 요소에 "Message sent successfully" 텍스트를 설정합니다.
+                    setTimeout(function () {                                                         // 5초 후 메시지를 지웁니다. 
                         msg.innerHTML = ""
                     }, 5000)
                     form.reset()
                 })
-                .catch(error => console.error('Error!', error.message))
+                .catch(error => console.error('Error!', error.message))                       // 문제가 생기면 오류 메시지를 콘솔에 기록합니다. 
         })
     </script>
 
@@ -273,6 +274,30 @@
     아래쪽에 p5.js 코드가 추가됩니다.
     p5.js 코드 생성: 노드7
 -->
+
+    <script>
+        let cnv;  // 전역 변수 cnv 선언, p5.js의 createCanvas 함수를 통해 생성된 캔버스 객체를 저장하기 위해 사용
+
+        // 웹페이지가 로딩될 때 한 번 실행됩니다.
+        function setup() {
+            cnv = createCanvas(windowWidth, windowHeight);  // 전체 브라우저의 너비와 높이를 사용해 캔버스 생성 후 cnv 변수에 저장
+            cnv.parent('p5Container');  // 생성한 캔버스를  'p5Container'라는 ID를 가진 HTML 요소에 부모로 설정
+
+            noCursor();  // 마우스 커서 숨기기
+        }
+
+        // 프로그램이 실행되는 동안 실행됩니다. 
+        function draw() {
+            background(0, 0);    // 투명한 검은색 배경 설정
+            fill(50);   // 도형을 어두운 회색으로 설정
+            ellipse(mouseX, mouseY, 80, 80);    // 마우스의 위치에 80*80 크기의 원 그리기
+        }
+
+        // 브라우저의 크기가 변경될 때 실행됩니다. 
+        function windowResized() {
+            resizeCanvas(windowWidth, windowHeight);  // 브라우저의 크기에 맞게 캔버스의 크기 조정
+        }
+    </script>
 </body>
 
 </html>
